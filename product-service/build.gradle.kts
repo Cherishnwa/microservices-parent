@@ -25,6 +25,11 @@ repositories {
 }
 
 dependencies {
+    // IMPORTANT: TestContainers BOM must be FIRST in the dependencies block
+    testImplementation(platform("org.testcontainers:testcontainers-bom:1.21.3"))
+    // Existing dependencies...
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+    // ... rest of your dependencies
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -33,6 +38,14 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    // TestContainers Modules
+    testImplementation("org.testcontainers:mongodb")
+    testImplementation("org.testcontainers:junit-jupiter")
+    // RestAssured for API testing
+    testImplementation("io.rest-assured:rest-assured")
+    // Additional testing utilities
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.boot:spring-boot-testcontainers")
 }
 
 tasks.withType<Test> {
