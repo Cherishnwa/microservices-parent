@@ -1,0 +1,187 @@
+{
+	"info": {
+		"_postman_id": "fc072e48-c3f5-44a0-830b-d2d0f02c147f",
+		"name": "Micro-Service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "49211651",
+		"_collection_link": "https://cherryexe-5167968.postman.co/workspace/cherryexe's-Workspace~bf1d86a8-6e7b-4c2e-86e7-501deb51bfb3/collection/49211651-fc072e48-c3f5-44a0-830b-d2d0f02c147f?action=share&source=collection_link&creator=49211651"
+	},
+	"item": [
+		{
+			"name": "Product Service API Tests",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"MacBook Pro M3\",\r\n    \"description\": \"14-inch MacBook Pro with M3 chip\",\r\n    \"price\": 1999.99\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/api/product",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"product"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Products",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/api/product",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"product"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Product",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Update Product",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"MacBook Pro M3 Max\",\r\n    \"description\": \"14-inch MacBook Pro with M3 Max chip - Updated\",\r\n    \"price\": 3199.99\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/api/product/691636b49947d45a10f2243a",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"product",
+						"691636b49947d45a10f2243a"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Product",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"iPhone 15\",\r\n    \"description\": \"Latest Apple smartphone\",\r\n    \"price\": 999.99\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8084/api/product",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8084",
+					"path": [
+						"api",
+						"product"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Product2",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"iPhone 15 Pro\",\r\n  \"description\": \"Updated description\",\r\n  \"price\": 1099.99\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8084/api/product/6916519587cacdb62bd895dd",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8084",
+					"path": [
+						"api",
+						"product",
+						"6916519587cacdb62bd895dd"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": "",
+			"type": "default"
+		}
+	]
+}
