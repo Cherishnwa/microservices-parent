@@ -1,0 +1,132 @@
+# Docker Compose version
+version: '3.8'
+
+# Services section: Define all containers
+services:
+
+  # ==========================================
+  # SERVICE 1: MongoDB Database
+  # ==========================================
+  mongodb:
+    # Use official MongoDB image from Docker Hub
+    image: mongo:latest
+
+    # Container name (optional, but helpful for docker commands)
+    container_name: mongodb
+
+    # Port mapping: host:container
+    # Access MongoDB on localhost:27017
+    ports:
+      - "27017:27017"
+
+    # Environment variables for MongoDB initialization
+    environment:
+      # Root username and password
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+      # Database to create on first startup
+      MONGO_INITDB_DATABASE: product-service
+
+    # Volumes: Persist data and mount init scripts
+    volumes:
+      # Named volume: Persist MongoDB data
+      - mongodb-data:/data/db
+      # Bind mount: MongoDB runs scripts in this directory on first startup
+      - ./init/mongo/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+
+    # Connect to custom network
+    networks:
+      - microservices-network
+
+    # Restart policy: Restart container unless manually stopped
+    restart: unless-stopped
+
+  # ==========================================
+  # SERVICE 2: Product Service Application
+  # ==========================================
+  product-service:
+    # Build configuration
+    build:
+      # Directory containing Dockerfile
+      context: ./product-service
+      # Dockerfile name (default is "Dockerfile")
+      dockerfile: Dockerfile
+
+    # Tag the built image
+    image: product-service:1.0
+
+    # Container name
+    container_name: product-service
+
+    # Port mapping
+    ports:
+      - "8084:8084"
+
+    # Dependency: Start MongoDB before product-service
+    # Note: This only controls START order, not readiness
+    depends_on:
+      - mongodb
+
+    # Environment variables
+    environment:
+      # Activate Docker Spring profile
+      SPRING_PROFILES_ACTIVE: docker
+
+    # Connect to network
+    networks:
+      - microservices-network
+
+    # Restart policy
+    restart: unless-stopped
+
+  # ==========================================
+  # SERVICE 3: Mongo Express (Optional Web UI)
+  # ==========================================
+  mongo-express:
+    # Official Mongo Express image
+    image: mongo-express:latest
+
+    # Container name
+    container_name: mongo-express
+
+    # Port mapping: Access web UI at http://localhost:8081
+    ports:
+      - "8081:8081"
+
+    # Environment variables
+    environment:
+      # Connect to MongoDB service
+      ME_CONFIG_MONGODB_SERVER: mongodb
+      # Use the admin credentials from MongoDB
+      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+      ME_CONFIG_MONGODB_ADMINPASSWORD: password
+      # Web UI login credentials (different from MongoDB!)
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: pass
+
+    # Start after MongoDB
+    depends_on:
+      - mongodb
+
+    # Connect to network
+    networks:
+      - microservices-network
+
+    # Restart policy
+    restart: unless-stopped
+
+# ==========================================
+# VOLUMES: Define named volumes
+# ==========================================
+volumes:
+  # MongoDB data persistence
+  mongodb-data:
+    driver: local
+
+# ==========================================
+# NETWORKS: Define custom networks
+# ==========================================
+networks:
+  # Bridge network for inter-container communication
+  microservices-network:
+    driver: bridge

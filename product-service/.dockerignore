@@ -1,0 +1,10 @@
+# In product-service directory
+cat > .dockerignore << 'EOF'
+.gradle
+build
+.idea
+*.iml
+.git
+README.md
+.DS_Store
+EOF
