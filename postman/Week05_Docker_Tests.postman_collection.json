@@ -1,0 +1,197 @@
+{
+	"info": {
+		"_postman_id": "a1a2e3ba-013f-4d6f-8f4a-b3cc4c0b9321",
+		"name": "Product Service Docker Tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "49211651",
+		"_collection_link": "https://cherryexe-5167968.postman.co/workspace/COMP3095-ProductService-Tests~d5ec53d0-9b59-4a2b-9541-d0d72f8b018d/collection/49211651-a1a2e3ba-013f-4d6f-8f4a-b3cc4c0b9321?action=share&source=collection_link&creator=49211651"
+	},
+	"item": [
+		{
+			"name": "Create Product (Docker)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"iPad Pro 2025\",\r\n  \"description\": \"12.9-inch iPad Pro with M3 chip\",\r\n  \"price\": 1299.00\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8084/api/product",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8084",
+					"path": [
+						"api",
+						"product"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Product (Docker) #post3",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"AirPods Pro (3rd Gen)\",\r\n  \"description\": \"Active Noise Cancellation with Spatial Audio\",\r\n  \"price\": 249.99\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8084/api/product",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8084",
+					"path": [
+						"api",
+						"product"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Product (Docker)#2",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"MacBook Pro M3 Max\",\r\n  \"description\": \"14-inch MacBook Pro with M3 Max chip - Containerized\",\r\n  \"price\": 3199.99\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8084/api/product",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8084",
+					"path": [
+						"api",
+						"product"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Products (Docker)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8084/api/product/69168900b36804a0432d6e4b",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8084",
+					"path": [
+						"api",
+						"product",
+						"69168900b36804a0432d6e4b"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Product by ID (Docker)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8084/api/product/69168900b36804a0432d6e4b",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8084",
+					"path": [
+						"api",
+						"product",
+						"69168900b36804a0432d6e4b"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Product (Docker)",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"MacBook Pro M3 Max (Updated)\",\r\n  \"description\": \"16-inch MacBook Pro with M3 Max chip - Updated in Docker\",\r\n  \"price\": 3499.99\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8084/api/product/69168900b36804a0432d6e4b",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8084",
+					"path": [
+						"api",
+						"product",
+						"69168900b36804a0432d6e4b"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Product (Docker)",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8084/api/product/69168900b36804a0432d6e4b",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8084",
+					"path": [
+						"api",
+						"product",
+						"69168900b36804a0432d6e4b"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
