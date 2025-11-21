@@ -1,132 +1,145 @@
-# Docker Compose version
 version: '3.8'
 
-# Services section: Define all containers
 services:
 
-  # ==========================================
-  # SERVICE 1: MongoDB Database
-  # ==========================================
+  # ============================================
+  # MongoDB Database (for product-service)
+  # ============================================
   mongodb:
-    # Use official MongoDB image from Docker Hub
     image: mongo:latest
-
-    # Container name (optional, but helpful for docker commands)
     container_name: mongodb
-
-    # Port mapping: host:container
-    # Access MongoDB on localhost:27017
     ports:
-      - "27017:27017"
-
-    # Environment variables for MongoDB initialization
+      - "27018:27017"
     environment:
-      # Root username and password
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: password
-      # Database to create on first startup
-      MONGO_INITDB_DATABASE: product-service
-
-    # Volumes: Persist data and mount init scripts
     volumes:
-      # Named volume: Persist MongoDB data
       - mongodb-data:/data/db
-      # Bind mount: MongoDB runs scripts in this directory on first startup
       - ./init/mongo/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
-
-    # Connect to custom network
     networks:
       - microservices-network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-    # Restart policy: Restart container unless manually stopped
-    restart: unless-stopped
-
-  # ==========================================
-  # SERVICE 2: Product Service Application
-  # ==========================================
-  product-service:
-    # Build configuration
-    build:
-      # Directory containing Dockerfile
-      context: ./product-service
-      # Dockerfile name (default is "Dockerfile")
-      dockerfile: Dockerfile
-
-    # Tag the built image
-    image: product-service:1.0
-
-    # Container name
-    container_name: product-service
-
-    # Port mapping
-    ports:
-      - "8084:8084"
-
-    # Dependency: Start MongoDB before product-service
-    # Note: This only controls START order, not readiness
-    depends_on:
-      - mongodb
-
-    # Environment variables
-    environment:
-      # Activate Docker Spring profile
-      SPRING_PROFILES_ACTIVE: docker
-
-    # Connect to network
-    networks:
-      - microservices-network
-
-    # Restart policy
-    restart: unless-stopped
-
-  # ==========================================
-  # SERVICE 3: Mongo Express (Optional Web UI)
-  # ==========================================
+  # ============================================
+  # Mongo Express (MongoDB GUI)
+  # ============================================
   mongo-express:
-    # Official Mongo Express image
     image: mongo-express:latest
-
-    # Container name
     container_name: mongo-express
-
-    # Port mapping: Access web UI at http://localhost:8081
     ports:
       - "8081:8081"
-
-    # Environment variables
     environment:
-      # Connect to MongoDB service
-      ME_CONFIG_MONGODB_SERVER: mongodb
-      # Use the admin credentials from MongoDB
       ME_CONFIG_MONGODB_ADMINUSERNAME: admin
       ME_CONFIG_MONGODB_ADMINPASSWORD: password
-      # Web UI login credentials (different from MongoDB!)
+      ME_CONFIG_MONGODB_SERVER: mongodb
       ME_CONFIG_BASICAUTH_USERNAME: admin
-      ME_CONFIG_BASICAUTH_PASSWORD: pass
-
-    # Start after MongoDB
+      ME_CONFIG_BASICAUTH_PASSWORD: password
     depends_on:
-      - mongodb
-
-    # Connect to network
+      mongodb:
+        condition: service_healthy
     networks:
       - microservices-network
 
-    # Restart policy
-    restart: unless-stopped
+  # ============================================
+  # PostgreSQL Database (for order-service)
+  # ============================================
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: order-service
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres-data:/var/lib/postgresql
+      - ./init/postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+    networks:
+      - microservices-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d order-service"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-# ==========================================
-# VOLUMES: Define named volumes
-# ==========================================
-volumes:
-  # MongoDB data persistence
-  mongodb-data:
-    driver: local
+  # ============================================
+  # pgAdmin (PostgreSQL GUI)
+  # ============================================
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    ports:
+      - "8888:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - microservices-network
 
-# ==========================================
-# NETWORKS: Define custom networks
-# ==========================================
+  # ============================================
+  # Product Service (Spring Boot - MongoDB)
+  # ============================================
+  product-service:
+    build:
+      context: ./product-service
+      dockerfile: Dockerfile
+    image: product-service:latest
+    container_name: product-service
+    ports:
+      - "8084:8084"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATA_MONGODB_URI: mongodb://admin:password@mongodb:27017/product-service?authSource=admin
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - microservices-network
+
+  # ============================================
+  # Order Service (Spring Boot - PostgreSQL)
+  # ============================================
+  order-service:
+    build:
+      context: ./order-service
+      dockerfile: Dockerfile
+    image: order-service:latest
+    container_name: order-service
+    ports:
+      - "8082:8082"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/order-service
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - microservices-network
+
+# ============================================
+# Networks
+# ============================================
 networks:
-  # Bridge network for inter-container communication
   microservices-network:
     driver: bridge
+
+# ============================================
+# Volumes
+# ============================================
+volumes:
+  mongodb-data:
+  postgres-data:
+  pgadmin-data:
