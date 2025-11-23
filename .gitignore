@@ -41,3 +41,11 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+# Docker data directories
+docker/standalone/mongo-redis/db-data/
+docker/standalone/postgres/inventory-service/db-data/
+docker/integrated/mongo/data/
+docker/integrated/postgres/data/
+docker/standalone/postgres/order-service/db-data/
+docker/standalone/keycloak/db-data/

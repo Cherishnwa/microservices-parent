@@ -1,7 +1,7 @@
 package ca.gbc.orderservice.controller;
 
 import ca.gbc.orderservice.dto.OrderRequest;
-import ca.gbc.orderservice.service.OrderService;
+import ca.gbc.orderservice.service.OrderServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class OrderController {
 
-    private final OrderService orderService;
+    private final OrderServiceImpl orderServiceImpl;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public String placeOrder(@RequestBody OrderRequest orderRequest) {
-        orderService.placeOrder(orderRequest);
+        orderServiceImpl.placeOrder(orderRequest);
         return "Order Placed Successfully";
     }
 }

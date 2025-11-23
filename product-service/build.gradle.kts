@@ -1,6 +1,6 @@
 plugins {
     java
-    id("org.springframework.boot") version "3.5.7"
+    id("org.springframework.boot") version "3.5.6"
     id("io.spring.dependency-management") version "1.1.7"
 }
 
@@ -25,27 +25,41 @@ repositories {
 }
 
 dependencies {
-    // IMPORTANT: TestContainers BOM must be FIRST in the dependencies block
+    // TestContainers Bill-of-Materials (BOM)
     testImplementation(platform("org.testcontainers:testcontainers-bom:1.21.3"))
-    // Existing dependencies...
-    implementation("org.springframework.boot:spring-boot-starter-actuator")
-    // ... rest of your dependencies
+
+    // Spring Boot Starters
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-data-redis")
+
+    // Lombok
     compileOnly("org.projectlombok:lombok")
-    developmentOnly("org.springframework.boot:spring-boot-devtools")
     annotationProcessor("org.projectlombok:lombok")
+
+    // Spring Boot DevTools
+    developmentOnly("org.springframework.boot:spring-boot-devtools")
+
+    // Spring Boot Testing Starters
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testImplementation("org.springframework.boot:spring-boot-testcontainers")
+
     // TestContainers Modules
     testImplementation("org.testcontainers:mongodb")
     testImplementation("org.testcontainers:junit-jupiter")
-    // RestAssured for API testing
+    //testImplementation("org.testcontainers:redis")
+
+    // REST Assured for testing
     testImplementation("io.rest-assured:rest-assured")
-    // Additional testing utilities
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.springframework.boot:spring-boot-testcontainers")
+
+    // Test Platform Launcher
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+    // Week 12 - Swagger/OpenAPI Documentation
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.8")
+    testImplementation("org.springdoc:springdoc-openapi-starter-webmvc-api:2.8.8")
+
 }
 
 tasks.withType<Test> {
